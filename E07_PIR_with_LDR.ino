@@ -1,24 +1,25 @@
 /**************************************************************************
-    Souliss - Light with PIR Sensor
-    
-    This example handle two lights as previous example but add an external
-    event (like a PIR sensor) to time-on the light in the active state.
-    
-    If the device is set in AUTO mode, the external event drive the output
-    state, is always possible to control manually the light.    
-
-    Run this code on one of the following boards:
-      - Arduino Ethernet (W5100) 
-      - Arduino with Ethernet Shield (W5100)
-      
-    As option you can run the same code on the following, just changing the
-    relevant configuration file at begin of the sketch
-      - Arduino with ENC28J60 Ethernet Shield
-      - Arduino with W5200 Ethernet Shield
-      - Arduino with W5500 Ethernet Shield
+    Souliss - Luce con sensore PIR
+    
+     Questo esempio gestisce un comando luci ma aggiunge un evento esterno
+     (come un sensore PIR) per l'accensione la luce nello stato attivo.
+    
+     Se il dispositivo è impostato in AUTO mode, l'evento esterno attiverà l'uscita,
+     è sempre possibile controllare manualmente la luce.
+     Questo codice è eseguibile su una delle seguenti schede:
+       - Arduino Ethernet (W5100)
+       - Arduino con Ethernet Shield (W5100)
+      
+     Come opzione è possibile eseguire lo stesso codice, cambiando semplicemente il
+     file di configurazione rilevante all'inizio dello sketch
+       - Arduino con schermo Ethernet ENC28J60
+       - Arduino con schermo Ethernet W5200
+       - Arduino con schermo Ethernet W5500
         
 ***************************************************************************/
 
+// Let the IDE point to the Souliss framework
+#include "SoulissFramework.h"
 
 // Configure the framework
 #include "bconf/StandardArduino.h"          // Use a standard Arduino
@@ -35,7 +36,7 @@
                   
 #define LIGHT_ON_CYCLE          10          // Light ON for 10 cycles if triggered by a PIR sensor
 
-#define LDR_THRESOLD           500
+#define LDR_THRESOLD           500          // Soglia fotoresistenza
 
 //DEFINICION DE PINES
 #define LIGHT_PIN                8
@@ -47,8 +48,8 @@ void setup()
 {   
     Initialize();
 
-    // Get the IP address from DHCP
-    GetIPAddress();                          
+    
+    GetIPAddress();                  // Get the IP address from DHCP        
     SetAsGateway(myvNet_dhcp);       // Set this node as gateway for SoulissApp  
 
     // Set the typical logic to handle the lights
@@ -72,11 +73,11 @@ void loop()
         FAST_90ms() {
         
             //Auto Mode when LDR <= LDR_THRESOLD
-            if(mOutput(PIR) != Souliss_T1n_AutoCmd && mOutputasFloat(LDR) <= LDR_THRESOLD)
+            if(mOutput(PIR) != Souliss_T1n_AutoCmd && mOutputAsFloat(LDR) <= LDR_THRESOLD)
                 mInput(PIR) = Souliss_T1n_AutoCmd;
             
             //Off Mode when LDR >= LDR_THRESOLD
-            if(mOutput(PIR) == Souliss_T1n_AutoCmd && mOutputasFloat(LDR) >= LDR_THRESOLD)
+            if(mOutput(PIR) == Souliss_T1n_AutoCmd && mOutputAsFloat(LDR) >= LDR_THRESOLD)
                 mInput(PIR) == Souliss_T1n_OffCmd;
                 
             // Use BUTTON_PIN to Toggle On/Off
@@ -111,4 +112,3 @@ void loop()
         }     
     }       
 } 
-
